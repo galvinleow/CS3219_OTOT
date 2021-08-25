@@ -1,1 +1,1 @@
-CS3219_OTOT
+This repository will consist of all the work done for CS3219 OTOT assignment. Each subtask will be of a different branch.

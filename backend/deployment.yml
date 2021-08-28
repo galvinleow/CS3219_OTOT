@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: main-server
+spec:
+  selector:
+    app: main-server
+  ports:
+    - protocol: "TCP"
+      port: 5001
+      targetPort: 5001
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: main-server
+  labels:
+    app: main-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: main-server
+  template:
+    metadata:
+      labels:
+        app: main-server
+    spec:
+      containers:
+        - name: main-server
+          image: galvinlwy/main-server
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5001

@@ -3,7 +3,7 @@ from flask import Flask, request
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
-@app.route('/', methods=['GET'])
+@app.route('/main-server', methods=['GET'])
 def hello_world():
     return 'Hello World'
 

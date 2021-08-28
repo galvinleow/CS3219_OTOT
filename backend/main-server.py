@@ -2,8 +2,9 @@ from flask import Flask, request
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
+PROXY_URL = '/main-server'
 
-@app.route('/', methods=['GET'])
+@app.route(PROXY_URL, methods=['GET'])
 def hello_world():
     return 'Hello World'
 

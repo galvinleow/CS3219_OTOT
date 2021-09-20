@@ -1,21 +1,26 @@
 {
-  "name": "backend",
+  "name": "cs3219-backend",
   "version": "1.0.0",
-  "description": "CS3219 OTOT Assignment Backend",
+  "description": "CS3219 Backend Server",
   "main": "index.js",
   "scripts": {
+    "serve": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "api",
-    "restful",
-    "json"
-  ],
   "author": "Galvin Leow",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongoose": "^6.0.4"
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "ms": "^3.0.0-canary.1",
+    "rand-token": "^1.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }

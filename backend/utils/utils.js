@@ -72,7 +72,7 @@ function getCleanUser(user) {
   if (!user) return null;
 
   return {
-    userId: user.userId,
+    userId: user._id,
     name: user.name,
     username: user.username,
     isAdmin: user.isAdmin,

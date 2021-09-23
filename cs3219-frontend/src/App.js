@@ -9,6 +9,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
 
 import { verifyTokenAsync } from "./asyncActions/authAsyncActions";
+import Tracker from "./pages/Tracker/Tracker";
 
 function App() {
   const authObj = useSelector((state) => state.auth);
@@ -37,6 +38,9 @@ function App() {
             <NavLink activeClassName="active" to="/dashboard">
               Dashboard
             </NavLink>
+            <NavLink activeClassName="active" to="/tracker">
+              Tracker
+            </NavLink>
           </div>
           <div className="content">
             <Switch>
@@ -48,6 +52,11 @@ function App() {
               <PrivateRoute
                 path="/dashboard"
                 component={Dashboard}
+                isAuthenticated={isAuthenticated}
+              />
+              <PrivateRoute
+                path="/tracker"
+                component={Tracker}
                 isAuthenticated={isAuthenticated}
               />
               <Redirect to={isAuthenticated ? "/dashboard" : "/login"} />

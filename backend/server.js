@@ -7,6 +7,7 @@ const router = express.Router();
 
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/users");
+const taskRoutes = require("./routes/tasks");
 mongoose.connect("mongodb://localhost:27017/cs3219usersdb", {
   useNewUrlParser: true,
 });
@@ -22,30 +23,30 @@ const { refreshTokens, verifyToken, handleResponse } = require("./utils/utils");
 const app = express();
 const port = process.env.PORT || 4000;
 
-// list of the users to be consider as a database for example
-const userList = [
-  {
-    userId: "123",
-    password: "clue",
-    name: "Clue",
-    username: "clue",
-    isAdmin: true,
-  },
-  {
-    userId: "456",
-    password: "mediator",
-    name: "Mediator",
-    username: "mediator",
-    isAdmin: true,
-  },
-  {
-    userId: "789",
-    password: "123456",
-    name: "Clue Mediator",
-    username: "cluemediator",
-    isAdmin: true,
-  },
-];
+// // list of the users to be consider as a database for example
+// const userList = [
+//   {
+//     userId: "123",
+//     password: "clue",
+//     name: "Clue",
+//     username: "clue",
+//     isAdmin: true,
+//   },
+//   {
+//     userId: "456",
+//     password: "mediator",
+//     name: "Mediator",
+//     username: "mediator",
+//     isAdmin: true,
+//   },
+//   {
+//     userId: "789",
+//     password: "123456",
+//     name: "Clue Mediator",
+//     username: "cluemediator",
+//     isAdmin: true,
+//   },
+// ];
 
 // enable CORS
 app.use(
@@ -100,6 +101,8 @@ const authMiddleware = function (req, res, next) {
     }
   });
 };
+
+app.use("/tasks", authMiddleware, taskRoutes);
 
 // get list of the users
 // app.get("/users/getList", authMiddleware, (req, res) => {

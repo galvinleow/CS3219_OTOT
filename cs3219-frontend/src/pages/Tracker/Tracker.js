@@ -1,13 +1,23 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { userLogout, verifyTokenEnd } from "../../actions/authActions";
 import { verifyTokenAsync } from "../../asyncActions/authAsyncActions";
 import { setAuthToken } from "../../services/auth";
+import {
+  addTaskService,
+  deleteTaskService,
+  getTaskListService,
+  getTaskService,
+  updateTaskService,
+} from "../../services/task";
 import AddTask from "./AddTask";
 import Header from "./Header";
 import Tasks from "./Tasks";
 
 function Tracker() {
+  const API_URL = "http://localhost:4000";
+
   const dispatch = useDispatch();
   const authObj = useSelector((state) => state.auth);
 
@@ -35,39 +45,52 @@ function Tracker() {
     getTasks();
   }, []);
 
+  // Fetch All Task
   const fetchTasks = async () => {
-    const response = await fetch("http://localhost:4000/tasks");
-    const data = await response.json();
-    return data;
+    const result = await getTaskListService();
+    if (result.error) {
+      dispatch(verifyTokenEnd());
+      if (result.response && [401, 403].includes(result.response.status))
+        dispatch(userLogout());
+      return;
+    }
+    return result.data;
   };
 
+  // Fetch Single Task
   const fetchTask = async (id) => {
-    const res = await fetch(`http://localhost:4000/tasks/${id}`);
-    const data = await res.json();
-    return data;
+    const result = await getTaskService(id);
+    if (result.error) {
+      dispatch(verifyTokenEnd());
+      if (result.response && [401, 403].includes(result.response.status))
+        dispatch(userLogout());
+      return;
+    }
+    return result.data;
   };
 
   //Add Task
   const addTask = async (task) => {
-    const response = await fetch("http://localhost:4000/tasks", {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(task),
-    });
-
-    const data = await response.json();
-    setTasks([...tasks, data]);
-
-    // This is used when there is no server
-    // const id = Math.floor(Math.random() * 100) + 1;
-    // const newTask = { id, ...task };
-    // setTasks([...tasks, newTask]);
+    const result = await addTaskService(task);
+    if (result.error) {
+      dispatch(verifyTokenEnd());
+      if (result.response && [401, 403].includes(result.response.status))
+        dispatch(userLogout());
+      return;
+    }
+    setTasks([...tasks, result.data]);
   };
 
   // Delete Task
   const deleteTask = async (id) => {
-    await fetch(`http://localhost:4000/tasks/${id}`, { method: "DELETE" });
-    setTasks(tasks.filter((task) => task.id !== id));
+    const result = await deleteTaskService(id);
+    if (result.error) {
+      dispatch(verifyTokenEnd());
+      if (result.response && [401, 403].includes(result.response.status))
+        dispatch(userLogout());
+      return;
+    }
+    setTasks(tasks.filter((task) => task._id !== id));
   };
 
   // Toggle Reminder
@@ -75,19 +98,16 @@ function Tracker() {
     const taskToToggle = await fetchTask(id);
     const updTask = { ...taskToToggle, reminder: !taskToToggle.reminder };
 
-    const res = await fetch(`http://localhost:4000/tasks/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify(updTask),
-    });
-
-    const data = await res.json();
-
+    const result = await updateTaskService(id, updTask);
+    if (result.error) {
+      dispatch(verifyTokenEnd());
+      if (result.response && [401, 403].includes(result.response.status))
+        dispatch(userLogout());
+      return;
+    }
     setTasks(
       tasks.map((task) =>
-        task.id === id ? { ...task, reminder: data.reminder } : task
+        task._id === id ? { ...task, reminder: !result.data.reminder } : task
       )
     );
   };

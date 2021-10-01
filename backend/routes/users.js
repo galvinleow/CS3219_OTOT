@@ -58,6 +58,8 @@ router.post("/auth/signin", async function (req, res, next) {
 
   // refresh token list to manage the xsrf token
   refreshTokens[refreshToken] = tokenObj.xsrfToken;
+  console.log("----- Set refresh token ------");
+  console.log("RefreshTokens: ", refreshTokens);
 
   // set cookies
   res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS);
@@ -112,6 +114,7 @@ router.post("/auth/verifyToken", function (req, res) {
 
       // refresh token list to manage the xsrf token
       refreshTokens[refreshToken] = tokenObj.xsrfToken;
+      console.log("Verify API - RefreshTokens: ", refreshTokens);
       res.cookie("XSRF-TOKEN", tokenObj.xsrfToken);
 
       // return the token along with user details
@@ -141,7 +144,7 @@ router.get("/getAllUsers", function (req, res, next) {
 // });
 
 // /* SAVE USER */
-router.post("/", function (req, res, next) {
+router.post("/addUser", function (req, res, next) {
   User.create(req.body, function (err, post) {
     if (err) return next(err);
     res.json(post);

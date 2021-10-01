@@ -8,15 +8,12 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/users");
 const taskRoutes = require("./routes/tasks");
-mongoose.connect("mongodb://localhost:27017/cs3219usersdb", {
-  useNewUrlParser: true,
-});
-var db = mongoose.connection;
-if (!db) {
-  console.log("Error connection db");
-} else {
-  console.log("Db connected sucessfully");
-}
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+  })
+  .then(() => console.log("Connection Successful"))
+  .catch((err) => console.error(`There was an error in connection: ${err}`));
 
 const { refreshTokens, verifyToken, handleResponse } = require("./utils/utils");
 
@@ -26,21 +23,18 @@ const port = process.env.PORT || 4000;
 // // list of the users to be consider as a database for example
 // const userList = [
 //   {
-//     userId: "123",
 //     password: "clue",
 //     name: "Clue",
 //     username: "clue",
 //     isAdmin: true,
 //   },
 //   {
-//     userId: "456",
 //     password: "mediator",
 //     name: "Mediator",
 //     username: "mediator",
 //     isAdmin: true,
 //   },
 //   {
-//     userId: "789",
 //     password: "123456",
 //     name: "Clue Mediator",
 //     username: "cluemediator",
@@ -51,10 +45,11 @@ const port = process.env.PORT || 4000;
 // enable CORS
 app.use(
   cors({
-    origin: "http://localhost:3000", // url of the frontend application
+    origin: process.env.ORIGIN, // url of the frontend application
     credentials: true, // set credentials true for secure httpOnly cookie
   })
 );
+
 // parse application/json
 app.use(express.json());
 // parse application/x-www-form-urlencoded
@@ -70,7 +65,9 @@ app.use("/users", userRoutes);
 // In all private routes, this helps to know if the request is authenticated or not.
 const authMiddleware = function (req, res, next) {
   // check header or url parameters or post parameters for token
+  console.log("Enter Authmiddleware: ", refreshTokens);
   var token = req.headers["authorization"];
+
   if (!token) return handleResponse(req, res, 401);
 
   token = token.replace("Bearer ", "");
@@ -84,18 +81,24 @@ const authMiddleware = function (req, res, next) {
   // verify xsrf token
   const { signedCookies = {} } = req;
   const { refreshToken } = signedCookies;
+  console.log("XSRF TOKEN: ", xsrfToken);
+  console.log("Req.SignedCookies: ", req.signedCookies);
   if (
     !refreshToken ||
     !(refreshToken in refreshTokens) ||
     refreshTokens[refreshToken] !== xsrfToken
   ) {
+    console.error("Error concerning refreshToken");
     return handleResponse(req, res, 401);
   }
 
   // verify token with secret key and xsrf token
   verifyToken(token, xsrfToken, (err, payload) => {
-    if (err) return handleResponse(req, res, 401);
-    else {
+    console.log("Enter Verification Token");
+    if (err) {
+      console.error("Error concering token verification");
+      return handleResponse(req, res, 401);
+    } else {
       req.user = payload; //set the user to req so other routes can use it
       next();
     }

@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Task = require("../models/Task");
 
 // Get All Task
-router.get("/", function (req, res, next) {
+router.get("/getAllTasks", function (req, res, next) {
   Task.find(function (err, users) {
     if (err) return next(err);
     res.json(users);
@@ -12,7 +12,7 @@ router.get("/", function (req, res, next) {
 });
 
 // GET SINGLE TASK BY ID
-router.get("/:id", function (req, res, next) {
+router.get("/getSingleTask/:id", function (req, res, next) {
   Task.findById(req.params.id, function (err, post) {
     if (err) return next(err);
     res.json(post);
@@ -20,7 +20,7 @@ router.get("/:id", function (req, res, next) {
 });
 
 // Add Task
-router.post("/", function (req, res, next) {
+router.post("/addSingleTask", function (req, res, next) {
   Task.create(req.body, function (err, post) {
     if (err) return next(err);
     res.json(post);
@@ -28,17 +28,20 @@ router.post("/", function (req, res, next) {
 });
 
 // DELETE SINGLE TASK BY ID
-router.delete("/:id", function (req, res, next) {
+router.delete("/deleteSingleTask/:id", function (req, res, next) {
   Task.findByIdAndDelete(req.params.id, function (err, post) {
     if (err) return next(err);
     res.json(post);
   });
 });
 
-router.put("/:id", function (req, res, next) {
+router.put("/updateSingleTask/:id", function (req, res, next) {
   Task.findByIdAndUpdate(req.params.id, req.body, function (err, post) {
     if (err) return next(err);
-    res.json(post);
+    Task.findById(req.params.id, function (err, post) {
+      if (err) return next(err);
+      res.json(post);
+    });
   });
 });
 

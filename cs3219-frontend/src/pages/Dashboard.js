@@ -40,16 +40,16 @@ function Dashboard() {
     setAuthToken(token);
     const verifyTokenTimer = setTimeout(() => {
       dispatch(verifyTokenAsync(true));
-    }, moment(expiredAt).diff() - 10 * 1000);
+    }, moment(expiredAt));
     return () => {
       clearTimeout(verifyTokenTimer);
     };
   }, [expiredAt, token]);
 
   // get user list on page load
-  useEffect(() => {
-    getUserList();
-  }, []);
+  // useEffect(() => {
+  //   getUserList();
+  // }, []);
 
   return (
     <div>
@@ -57,12 +57,12 @@ function Dashboard() {
       <br />
       <input type="button" onClick={handleLogout} value="Logout" />
       <br />
-      <br />
+      {/* <br />
       <input type="button" onClick={getUserList} value="Get Data" />
       <br />
       <br />
       <b>User List:</b>
-      <pre>{JSON.stringify(userList, null, 2)}</pre>
+      <pre>{JSON.stringify(userList, null, 2)}</pre> */}
     </div>
   );
 }

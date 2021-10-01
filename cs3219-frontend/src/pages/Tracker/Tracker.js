@@ -16,8 +16,6 @@ import Header from "./Header";
 import Tasks from "./Tasks";
 
 function Tracker() {
-  const API_URL = "http://localhost:4000";
-
   const dispatch = useDispatch();
   const authObj = useSelector((state) => state.auth);
 
@@ -31,19 +29,15 @@ function Tracker() {
     setAuthToken(token);
     const verifyTokenTimer = setTimeout(() => {
       dispatch(verifyTokenAsync(true));
-    }, moment(expiredAt).diff() - 10 * 1000);
-    return () => {
-      clearTimeout(verifyTokenTimer);
-    };
-  }, [expiredAt, token]);
+    }, moment(expiredAt));
 
-  useEffect(() => {
-    const getTasks = async () => {
-      const tasksFromServer = await fetchTasks();
-      setTasks(tasksFromServer);
-    };
-    getTasks();
-  }, []);
+    return (
+      () => {
+        clearTimeout(verifyTokenTimer);
+      },
+      [tasks]
+    );
+  }, [dispatch, expiredAt, token]);
 
   // Fetch All Task
   const fetchTasks = async () => {
@@ -107,10 +101,18 @@ function Tracker() {
     }
     setTasks(
       tasks.map((task) =>
-        task._id === id ? { ...task, reminder: !result.data.reminder } : task
+        task._id === id ? { ...task, reminder: result.data.reminder } : task
       )
     );
   };
+
+  useEffect(() => {
+    const getTasks = async () => {
+      const tasksFromServer = await fetchTasks();
+      setTasks(tasksFromServer);
+    };
+    getTasks();
+  }, []);
 
   return (
     <>
@@ -120,7 +122,7 @@ function Tracker() {
         showAdd={showAddTask}
       />
       {showAddTask && <AddTask onAdd={addTask} />}
-      {tasks.length > 0 ? (
+      {tasks ? (
         <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} />
       ) : (
         "No Task To Show"

@@ -22,9 +22,9 @@ describe("Users", () => {
             expect(res.body[0]).to.contain.property("username");
             expect(res.body[0]).to.contain.property("isAdmin");
           }
-          done();
         });
     });
+    done();
   });
 });
 
@@ -51,8 +51,8 @@ describe("POST /addUser", () => {
         expect(res.body.name).equals("Add User Test");
         expect(res.body.username).equals("Add User Test");
         expect(res.body.isAdmin).equals(true);
-        done();
       });
+    done();
   });
 });
 
@@ -79,10 +79,10 @@ describe("PUT /updateSingleUser", () => {
               .end((err, res) => {
                 const toCheck = res.body[res.body.length - 1];
                 assert(toCheck.name === "Updated Value Test");
-                done();
               });
           });
       });
+    done();
   });
 });
 
@@ -113,9 +113,9 @@ describe("DELETE /deleteSingleUser", () => {
               .get("/users/getAllUsers")
               .end((err, res) => {
                 assert(res.body.length === beforeAmount - 1);
-                done();
               });
           });
       });
+    done();
   });
 });

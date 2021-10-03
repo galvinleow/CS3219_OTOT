@@ -45,9 +45,6 @@ function generateToken(user) {
     .add(ms(process.env.ACCESS_TOKEN_LIFE), "ms")
     .valueOf();
 
-  console.log(moment().valueOf());
-  console.log(expiredAt);
-
   return {
     token,
     expiredAt,

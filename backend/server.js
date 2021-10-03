@@ -65,7 +65,6 @@ app.use("/users", userRoutes);
 // In all private routes, this helps to know if the request is authenticated or not.
 const authMiddleware = function (req, res, next) {
   // check header or url parameters or post parameters for token
-  console.log("Enter Authmiddleware: ", refreshTokens);
   var token = req.headers["authorization"];
 
   if (!token) return handleResponse(req, res, 401);
@@ -81,8 +80,6 @@ const authMiddleware = function (req, res, next) {
   // verify xsrf token
   const { signedCookies = {} } = req;
   const { refreshToken } = signedCookies;
-  console.log("XSRF TOKEN: ", xsrfToken);
-  console.log("Req.SignedCookies: ", req.signedCookies);
   if (
     !refreshToken ||
     !(refreshToken in refreshTokens) ||
@@ -94,7 +91,6 @@ const authMiddleware = function (req, res, next) {
 
   // verify token with secret key and xsrf token
   verifyToken(token, xsrfToken, (err, payload) => {
-    console.log("Enter Verification Token");
     if (err) {
       console.error("Error concering token verification");
       return handleResponse(req, res, 401);

@@ -1,0 +1,16 @@
+service: aws-lambda-cs3219-otot
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  memorySize: 512
+  timeout: 15
+  stage: production
+  region: ap-southeast-1
+
+functions:
+  api:
+    handler: lambda.handler
+    events:
+      - http: ANY /{proxy+}
+      - http: ANY /

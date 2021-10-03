@@ -86,7 +86,7 @@ const authMiddleware = function (req, res, next) {
     refreshTokens[refreshToken] !== xsrfToken
   ) {
     console.error("Error concerning refreshToken");
-    return handleResponse(req, res, 401);
+    return handleResponse(req, res, 403);
   }
 
   // verify token with secret key and xsrf token

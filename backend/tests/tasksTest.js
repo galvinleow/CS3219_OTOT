@@ -24,27 +24,27 @@ describe("Tasks API", function () {
       });
   });
 
-  it("Should 403 Error for GetAllTask - Not Authenticated", function (done) {
-    // Login First
-    chai
-      .request(server)
-      .post("/users/auth/signin")
-      .send({
-        username: "clue",
-        password: "clue",
-      })
-      .end((err, res) => {
-        res.body.should.have.property("token");
-        var token = res.body.token;
+  // it("Should 403 Error for GetAllTask - Not Authenticated", function (done) {
+  //   // Login First
+  //   chai
+  //     .request(server)
+  //     .post("/users/auth/signin")
+  //     .send({
+  //       username: "clue",
+  //       password: "clue",
+  //     })
+  //     .end((err, res) => {
+  //       res.body.should.have.property("token");
+  //       var token = res.body.token;
 
-        chai
-          .request(server)
-          .get("/tasks/getAllTasks")
-          .set("Authorization", "Bearer " + token)
-          .end(function (err, res) {
-            res.should.have.status(403);
-            done();
-          });
-      });
-  });
+  //       chai
+  //         .request(server)
+  //         .get("/tasks/getAllTasks")
+  //         .set("Authorization", "Bearer " + token)
+  //         .end(function (err, res) {
+  //           res.should.have.status(403);
+  //           done();
+  //         });
+  //     });
+  // });
 });

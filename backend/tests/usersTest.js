@@ -23,8 +23,8 @@ describe("Users", () => {
             expect(res.body[0]).to.contain.property("isAdmin");
           }
         });
+      done();
     });
-    done();
   });
 });
 

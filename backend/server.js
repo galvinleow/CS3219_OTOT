@@ -8,6 +8,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const userRoutes = require("./routes/users");
 const taskRoutes = require("./routes/tasks");
+const photoRoutes = require("./routes/photos");
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -60,6 +61,8 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // user api routes
 app.use("/users", userRoutes);
+// user api routes
+app.use("/photos", photoRoutes);
 
 // middleware that checks if JWT token exists and verifies it if it does exist.
 // In all private routes, this helps to know if the request is authenticated or not.
